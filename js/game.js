@@ -4,9 +4,18 @@
 // TODO: create the model with matrix of gBoard and each cell has the following object for example: {minesAroundCount: 4,isShown: false,isMine: false,isMarked: true} 
 // TODO: create the gLevel object - gLevel = {SIZE: 4, MINES: 2}
 // TODO: create the Ggame Object - gGame = {isOn: false, shownCount: 0, markedCount: 0, secsPassed: 0}
+var gBoard
+// = [
+//     [{ MinesAroundCount: 1, isShown: false, isMine: false, isMarked: true }],
+//     [{ MinesAroundCount: 1, isShown: false, isMine: false, isMarked: true }],
+//     [{ MinesAroundCount: 1, isShown: false, isMine: false, isMarked: true }],
+//     [{ MinesAroundCount: 1, isShown: false, isMine: false, isMarked: true }]
+// ]
 
 function onInit() {
     // TODO: Load The Game
+    gBoard = buildBoard()
+    renderBoard(gBoard)
 }
 
 function buildBoard() {
@@ -14,14 +23,17 @@ function buildBoard() {
     // TODO: Set Mines
     // TODO: Call setMinesNegsCount()
     // TODO: Return the created board.
+    const board = createMat(4)
+    for (var i = 0; i < board.length; i++) {
+        for (var j = 0; j < board[i].length; j++) {
+            board[i][j] = { MinesAroundCount: 1, isShown: false, isMine: false, isMarked: true }
+        }
+    }
+    return board
 }
 
 function setMinesNegsCount(board) {
     // TODO: Count mins around each cell and set the cell's mineAroundCount.
-}
-
-function renderBoard(board) {
-    // TODO: Render the board as a <table> to the page
 }
 
 function onCellClicked(elCell, i, j) {
