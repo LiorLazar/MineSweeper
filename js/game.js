@@ -1,39 +1,45 @@
 'use strict'
 
 // TODOS - GENERAL:
-// TODO: create the model with matrix of gBoard and each cell has the following object for example: {minesAroundCount: 4,isShown: false,isMine: false,isMarked: true} 
+// DONE: create the model with matrix of gBoard and each cell has the following object for example: {minesAroundCount: 4,isShown: false,isMine: false,isMarked: true} 
 // TODO: create the gLevel object - gLevel = {SIZE: 4, MINES: 2}
 // TODO: create the Ggame Object - gGame = {isOn: false, shownCount: 0, markedCount: 0, secsPassed: 0}
+
+// Model
 var gBoard
-// = [
-//     [{ MinesAroundCount: 1, isShown: false, isMine: false, isMarked: true }],
-//     [{ MinesAroundCount: 1, isShown: false, isMine: false, isMarked: true }],
-//     [{ MinesAroundCount: 1, isShown: false, isMine: false, isMarked: true }],
-//     [{ MinesAroundCount: 1, isShown: false, isMine: false, isMarked: true }]
-// ]
+var gPos
+
 
 function onInit() {
     // TODO: Load The Game
     gBoard = buildBoard()
     renderBoard(gBoard)
+    gPos = { i: 0, j: 0 }
+
 }
 
 function buildBoard() {
-    // TODO: Builds the board.
-    // TODO: Set Mines
+    // DONE: Builds the board.
+    // DONE: Set Mines
     // TODO: Call setMinesNegsCount()
     // TODO: Return the created board.
-    const board = createMat(4)
+    const size = 4
+    const board = createMat(size)
     for (var i = 0; i < board.length; i++) {
-        for (var j = 0; j < board[i].length; j++) {
-            board[i][j] = { MinesAroundCount: 1, isShown: false, isMine: false, isMarked: true }
+        for (var j = 0; j < board[0].length; j++) {
+            gPos = { i, j }
+            board[i][j] = { minesAroundCount: 0, isShown: false, isMine: false, isMarked: true }
         }
     }
-    return board
-}
 
-function setMinesNegsCount(board) {
-    // TODO: Count mins around each cell and set the cell's mineAroundCount.
+    board[0][0].minesAroundCount = '*'
+    board[1][1].minesAroundCount = '*'
+    board[2][2].minesAroundCount = '*'
+    board[3][3].minesAroundCount = '*'
+
+    console.table(board)
+    return board
+
 }
 
 function onCellClicked(elCell, i, j) {
