@@ -16,10 +16,13 @@ function renderBoard(mat) {
     for (var i = 0; i < mat.length; i++) {
         strHTML += '<tr>'
         for (var j = 0; j < mat[i].length; j++) {
+
+            const className = `cell cell-${i}-${j}`
+
             var isMineStr = mat[i][j].isMine ? MINE : setMinesNegsCount(i, j)
-            if (mat[i][j].isMine) strHTML += `<td class="invisible" onclick="onCellClicked(this,${i},${j})" oncontextmenu="onCellMarked(this); return false;">${isMineStr}</td>`
+            if (mat[i][j].isMine) strHTML += `<td class="${className} invisible" onclick="onCellClicked(this,${i},${j})" oncontextmenu="onCellMarked(this); return false;">${isMineStr}</td>`
             else {
-                strHTML += `<td class="invisible" onclick="onCellClicked(this,${i},${j})" oncontextmenu="onCellMarked(this); return false;">${isMineStr} </td>`
+                strHTML += `<td class="${className} invisible" onclick="onCellClicked(this,${i},${j})" oncontextmenu="onCellMarked(this); return false;">${isMineStr} </td>`
                 gBoard[i][j].minesAroundCount = setMinesNegsCount(i, j)
             }
         }

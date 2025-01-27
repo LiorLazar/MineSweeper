@@ -21,7 +21,7 @@ function onInit() {
 function buildBoard() {
     // DONE: Builds the board.
     // DONE: Set Mines
-    // TODO: Call setMinesNegsCount()
+    // DONE: Call setMinesNegsCount()
     // DONE: Return the created board.
     const size = 4
     const board = createMat(size)
@@ -45,11 +45,38 @@ function onCellClicked(elCell, i, j) {
 }
 
 function onCellMarked(elCell) {
-    // TODO: Called when a cell is right-clicked
     // DONE: Check how to hide the context menu on right click.
-    elCell.classList.toggle('flag')
-    document.querySelector('.flag').innerHTML = FLAG
+    // DONE: Called when a cell is right-clicked
+    const classArr = []
+    var arr = []
 
+    var classId = elCell.classList[1]
+    arr = classId.split('-')
+    classArr.push(arr[1], arr[2])
+
+    // Model
+    var cell = gBoard[classArr[0]][classArr[1]]
+
+    // DOM
+    var oldCell = elCell.innerText
+
+    if (!cell.isMarked) {
+        elCell.classList.remove('invisible')
+        cell.isMarked = true
+        elCell.innerText = FLAG
+    } else {
+        elCell.classList.add('invisible')
+        cell.isMarked = false
+        if (cell.isMine) {
+            cell.isMarked = false
+            elCell.innerText = MINE
+            elCell.classList.add('invisible')
+        } else {
+            cell.isMarked = false
+            elCell.innerText = cell.minesAroundCount
+            elCell.classList.add('invisible')
+        }
+    }
 }
 
 function checkGameOver() {
