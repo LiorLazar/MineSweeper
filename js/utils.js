@@ -16,8 +16,12 @@ function renderBoard(mat) {
     for (var i = 0; i < mat.length; i++) {
         strHTML += '<tr>'
         for (var j = 0; j < mat[i].length; j++) {
-            if (mat[i][j].minesAroundCount === '*') strHTML += `<td>${mat[i][j].minesAroundCount} </td>`
-            else strHTML += `<td>${setMinesNegsCount(i, j)} </td>`
+            var isMineStr = mat[i][j].isMine ? MINE : setMinesNegsCount(i, j)
+            if (mat[i][j].isMine) strHTML += `<td onclick="onCellClicked(this,${i},${j})" oncontextmenu="onCellMarked(this); return false;">${isMineStr}</td>`
+            else {
+                strHTML += `<td onclick="onCellClicked(this,${i},${j})" oncontextmenu="onCellMarked(this); return false;">${isMineStr} </td>`
+                gBoard[i][j].minesAroundCount = setMinesNegsCount(i, j)
+            }
         }
         strHTML += '</tr>'
     }
@@ -33,7 +37,7 @@ function setMinesNegsCount(cellI, cellJ) {
         for (var j = cellJ - 1; j <= cellJ + 1; j++) {
             if (i === cellI && j === cellJ) continue
             if (j < 0 || j >= gBoard[i].length) continue
-            if (gBoard[i][j].minesAroundCount === '*') minesCount++
+            if (gBoard[i][j].isMine) minesCount++
         }
     }
     return minesCount
