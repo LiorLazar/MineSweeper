@@ -41,14 +41,7 @@ function buildBoard() {
 
 function onCellClicked(elCell, i, j) {
     // TODO: Called When a cell is clicked
-    if (elCell.innerText === MINE) console.log('BOOM')
-    else {
-        elCell.classList.add('visible')
-        document.querySelector('.visible').style.textIndent = 0
-        console.dir(elCell.innerText)
-    }
-
-
+    elCell.classList.remove('invisible')
 }
 
 function onCellMarked(elCell) {
