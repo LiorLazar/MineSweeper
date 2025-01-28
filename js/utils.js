@@ -46,3 +46,32 @@ function setMinesNegsCount(cellI, cellJ) {
     if (minesCount === 0) return ''
     return minesCount
 }
+
+function countEmptyCells(board) {
+    var res = []
+    for (var i = 0; i < board.length; i++) {
+        for (var j = 0; j < board[0].length; j++) {
+            if (board[i][j] !== MINE) res.push({ i, j })
+        }
+    }
+    if (res.length === 0) return null
+    return res
+}
+
+function getRandomPos(emptyCells) {
+    var randPos = getRandomIntInclusive(0, emptyCells.length - 1)
+    var drawnPos = emptyCells[randPos]
+    emptyCells.splice(randPos, 1)
+    return drawnPos
+}
+function createMine() {
+    var emptyCells = countEmptyCells(gBoard)
+    if (!emptyCells) return null
+    var randomCell = getRandomPos(emptyCells)
+    gBoard[randomCell.i][randomCell.j].isMine = true
+    renderBoard(gBoard)
+}
+
+function getRandomIntInclusive(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min
+}

@@ -15,7 +15,8 @@ function onInit() {
     // TODO: Load The Game
     gBoard = buildBoard()
     renderBoard(gBoard)
-
+    createMines(4)
+    console.log(gBoard)
 }
 
 function buildBoard() {
@@ -31,10 +32,10 @@ function buildBoard() {
         }
     }
 
-    board[0][0].isMine = true
-    board[1][1].isMine = true
-    board[2][2].isMine = true
-    board[3][3].isMine = true
+    // board[0][0].isMine = true
+    // board[1][1].isMine = true
+    // board[2][2].isMine = true
+    // board[3][3].isMine = true
 
     return board
 }
