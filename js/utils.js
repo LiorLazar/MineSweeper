@@ -51,7 +51,7 @@ function countEmptyCells(board) {
     var res = []
     for (var i = 0; i < board.length; i++) {
         for (var j = 0; j < board[0].length; j++) {
-            if (board[i][j] !== MINE) res.push({ i, j })
+            if (board[i][j].minesAroundCount == '') res.push({ i, j })
         }
     }
     if (res.length === 0) return null
