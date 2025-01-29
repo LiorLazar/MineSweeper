@@ -20,16 +20,25 @@ function renderBoard(mat) {
             const className = `cell cell-${i}-${j}`
 
             var isMineStr = mat[i][j].isMine ? MINE : setMinesNegsCount(i, j)
-            if (mat[i][j].isMine) strHTML += `<td class="${className} invisible" onclick="onCellClicked(this,${i},${j})" oncontextmenu="onCellMarked(this); return false;">${isMineStr}</td>`
-            else {
-                strHTML += `<td class="${className} invisible" onclick="onCellClicked(this,${i},${j})" oncontextmenu="onCellMarked(this); return false;">${isMineStr} </td>`
-                gBoard[i][j].minesAroundCount = setMinesNegsCount(i, j)
-            }
+            console.log("🚀 ~ renderBoard ~ isMineStr:", isMineStr)
+            strHTML += `<td 
+                        class="${className} invisible" 
+                        onclick="onCellClicked(this,${i},${j})" 
+                        oncontextmenu="onCellMarked(this); return false;">
+                        ${isMineStr}
+                        </td>`
         }
         strHTML += '</tr>'
     }
     const elBoard = document.querySelector('.board')
     elBoard.innerHTML = strHTML
+}
+
+function renderCell(location, value) {
+    // Select the elCell and set the value
+    const elCell = document.querySelector(`.cell-${location.i}-${location.j}`)
+    console.log(elCell)
+    elCell.innerHTML = value
 }
 
 function setMinesNegsCount(cellI, cellJ) {
@@ -64,13 +73,7 @@ function getRandomPos(emptyCells) {
     emptyCells.splice(randPos, 1)
     return drawnPos
 }
-function createMine() {
-    var emptyCells = countEmptyCells(gBoard)
-    if (!emptyCells) return null
-    var randomCell = getRandomPos(emptyCells)
-    gBoard[randomCell.i][randomCell.j].isMine = true
-    renderBoard(gBoard)
-}
+
 
 function getRandomIntInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min

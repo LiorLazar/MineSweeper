@@ -18,3 +18,9 @@ table{
 .invisible{
     text-indent: -9999px 
 }
+
+footer{
+    margin: 20px;
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+}

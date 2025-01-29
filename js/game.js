@@ -7,6 +7,7 @@
 
 // Model
 var gBoard
+var gIsFirstClick
 
 const FLAG = '🚩'
 const MINE = '*'
@@ -15,6 +16,7 @@ function onInit() {
     // TODO: Load The Game
     gBoard = buildBoard()
     renderBoard(gBoard)
+    gIsFirstClick = true
     // createMines(4)
     // console.log(gBoard)
 }
@@ -32,19 +34,27 @@ function buildBoard() {
         }
     }
 
-    board[0][0].isMine = true
-    board[1][1].isMine = true
-    board[2][2].isMine = true
-    board[3][3].isMine = true
+    // board[0][0].isMine = true
+    // board[1][1].isMine = true
+    // board[2][2].isMine = true
+    // board[3][3].isMine = true
 
     return board
 }
 
 function onCellClicked(elCell, i, j) {
     // TODO: Called When a cell is clicked
-    if (!gBoard[i][j].minesAroundCount) expandShown(gBoard, elCell, i, j)
+    if (gIsFirstClick) {
+        gIsFirstClick = false
+        createMines(4)
+    }
+    var pos = { i, j }
+    if (gBoard[i][j].isMine) {
+        renderCell(pos, MINE)
+        elCell.classList.remove('invisible')
+    }
+    else if (!gBoard[i][j].minesAroundCount) expandShown(gBoard, elCell, i, j)
     else elCell.classList.remove('invisible')
-
 }
 
 function onCellMarked(elCell) {
