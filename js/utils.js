@@ -3,33 +3,31 @@
 function createMat(size) {
     var mat = []
     for (var i = 0; i < size; i++) {
-        mat[i] = []
+        mat.push([])
         for (var j = 0; j < size; j++) {
-            mat[i][j] = 1
+            mat[i][j] = ''
         }
     }
     return mat
 }
 
-function renderBoard(mat) {
-    var strHTML = ''
-    for (var i = 0; i < mat.length; i++) {
+function renderBoard(board) {
+    var strHTML = '<table border="0"><tbody>'
+    for (var i = 0; i < board.length; i++) {
         strHTML += '<tr>'
-        for (var j = 0; j < mat[i].length; j++) {
-
-            const className = `cell cell-${i}-${j}`
-
-            var isMineStr = mat[i][j].isMine ? MINE : setMinesNegsCount(i, j)
-            console.log("🚀 ~ renderBoard ~ isMineStr:", isMineStr)
+        for (var j = 0; j < board[0].length; j++) {
+            var cell = board[i][j]
+            var className = `cell cell-${i}-${j}`
+            var cellContent = cell.isMine ? MINE : cell.minesAroundCount
             strHTML += `<td 
                         class="${className} invisible" 
-                        onclick="onCellClicked(this,${i},${j})" 
-                        oncontextmenu="onCellMarked(this); return false;">
-                        ${isMineStr}
+                        onclick="onCellClicked(this, ${i}, ${j})">
+                        ${cellContent}
                         </td>`
         }
         strHTML += '</tr>'
     }
+    strHTML += '</tbody></table>'
     const elBoard = document.querySelector('.board')
     elBoard.innerHTML = strHTML
 }
@@ -37,23 +35,28 @@ function renderBoard(mat) {
 function renderCell(location, value) {
     // Select the elCell and set the value
     const elCell = document.querySelector(`.cell-${location.i}-${location.j}`)
-    console.log(elCell)
     elCell.innerHTML = value
 }
 
-function setMinesNegsCount(cellI, cellJ) {
-    // DONE: Count mins around each cell and set the cell's mineAroundCount.
-    var minesCount = 0
-    for (var i = cellI - 1; i <= cellI + 1; i++) {
-        if (i < 0 || i >= gBoard.length) continue
-        for (var j = cellJ - 1; j <= cellJ + 1; j++) {
-            if (i === cellI && j === cellJ) continue
-            if (j < 0 || j >= gBoard[i].length) continue
-            if (gBoard[i][j].isMine) minesCount++
+function setMinesNegsCount(board) {
+    for (var i = 0; i < board.length; i++) {
+        for (var j = 0; j < board[0].length; j++) {
+            board[i][j].minesAroundCount = countMinesAround(board, i, j)
         }
     }
-    if (minesCount === 0) return ''
-    return minesCount
+}
+
+function countMinesAround(board, row, col) {
+    var count = 0
+    for (var i = row - 1; i <= row + 1; i++) {
+        if (i < 0 || i >= board.length) continue
+        for (var j = col - 1; j <= col + 1; j++) {
+            if (j < 0 || j >= board[0].length) continue
+            if (i === row && j === col) continue
+            if (board[i][j].isMine) count++
+        }
+    }
+    return count
 }
 
 function countEmptyCells(board) {
@@ -77,4 +80,18 @@ function getRandomPos(emptyCells) {
 
 function getRandomIntInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+function countCells(board) {
+    var count = 0
+    for (var i = 0; i < board.length; i++) {
+        for (var j = 0; j < board[i].length; j++) {
+            count++
+        }
+    }
+    return count
+}
+
+function getCellLocation(i, j) {
+    return `cell-${i}-${j}`
 }

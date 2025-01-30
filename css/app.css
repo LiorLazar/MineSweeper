@@ -16,7 +16,8 @@ table{
 }
 
 .invisible{
-    text-indent: -9999px 
+    text-indent: -9999px;
+    box-shadow: 10px 5px 5px rgb(6, 158, 150);
 }
 
 footer{

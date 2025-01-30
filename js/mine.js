@@ -15,3 +15,13 @@ function createMines(amount) {
         createMine()
     }
 }
+
+function countMines(board) {
+    var count = 0
+    for (var i = 0; i < board.length; i++) {
+        for (var j = 0; j < board.length; j++) {
+            if (board[i][j].isMine) count++
+        }
+    }
+    return count
+}
