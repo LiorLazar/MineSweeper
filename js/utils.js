@@ -19,7 +19,12 @@ function renderBoard(board) {
             var cell = board[i][j]
             var className = `cell cell-${i}-${j}`
             var cellContent = cell.isMine ? MINE : (cell.minesAroundCount === 0 ? '' : cell.minesAroundCount)
-            strHTML += `<td class="${className} invisible" onclick="onCellClicked(this, ${i}, ${j})" oncontextmenu="onCellMarked(this, ${i}, ${j}); return false;">${cellContent}</td>`
+            strHTML += `<td 
+                        class="${className} invisible" 
+                        onclick="onCellClicked(this, ${i}, ${j})" 
+                        oncontextmenu="onCellMarked(this, ${i}, ${j}); return false;">
+                        ${cellContent}
+                        </td>`
         }
         strHTML += '</tr>'
     }
@@ -71,7 +76,6 @@ function getRandomPos(emptyCells) {
     var randomIdx = Math.floor(Math.random() * emptyCells.length)
     return emptyCells[randomIdx]
 }
-
 
 function getRandomIntInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min

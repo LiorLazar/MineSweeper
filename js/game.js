@@ -1,10 +1,5 @@
 'use strict'
 
-// TODOS - GENERAL:
-// DONE: create the model with matrix of gBoard and each cell has the following object for example: {minesAroundCount: 4,isShown: false,isMine: false,isMarked: true} 
-// DONE: create the gLevel object - gLevel = {SIZE: 4, MINES: 2}
-// DONE: create the Ggame Object - gGame = {isOn: false, shownCount: 0, markedCount: 0, secsPassed: 0}
-
 // Model
 var gBoard
 var gIsFirstClick
@@ -28,13 +23,13 @@ function onInit() {
         SIZE: 4,
         MINES: 2
     }
+    console.log(gBoard)
 }
 
+// Call onInit when the page loads
+window.onload = onInit
+
 function buildBoard() {
-    // DONE: Builds the board.
-    // DONE: Set Mines
-    // DONE: Call setMinesNegsCount()
-    // DONE: Return the created board.
     const size = 4
     const board = createMat(size)
     for (var i = 0; i < board.length; i++) {
@@ -42,18 +37,19 @@ function buildBoard() {
             board[i][j] = { minesAroundCount: 0, isShown: false, isMine: false, isMarked: false }
         }
     }
-
-    board[0][0].isMine = true
-    board[1][1].isMine = true
-    board[2][2].isMine = true
-    board[3][3].isMine = true
-
-    setMinesNegsCount(board)
     return board
 }
 
 function onCellClicked(elCell, i, j) {
     if (!gGame.isOn) return
+
+    if (gIsFirstClick) {
+        gIsFirstClick = false
+        placeMines(gBoard, gLevel.MINES, { i, j })
+        setMinesNegsCount(gBoard)
+        renderBoard(gBoard)
+    }
+
     var cell = gBoard[i][j]
 
     if (cell.isMarked || cell.isShown) return
@@ -64,6 +60,7 @@ function onCellClicked(elCell, i, j) {
 
     if (cell.isMine) {
         elCell.innerText = MINE
+        // Handle game over logic if a mine is clicked
         gGame.isOn = false
         console.log('Game Over: You clicked on a mine!')
     } else {
@@ -104,19 +101,24 @@ function checkGameOver() {
             var cell = gBoard[i][j]
             if (cell.isMine && !cell.isMarked) {
                 allMinesMarked = false
+                // console.log(`Mine at (${i}, ${j}) is not marked`)
             }
             if (!cell.isMine && !cell.isShown) {
                 allCellsShown = false
+                // console.log(`Cell at (${i}, ${j}) is not shown`)
             }
         }
     }
+
+    // console.log(`allMinesMarked: ${allMinesMarked}, allCellsShown: ${allCellsShown}`)
+
     if (allMinesMarked && allCellsShown) {
         gGame.isOn = false
         console.log('Game Over: You Win!')
     }
 }
 
-function expandShown(board, cellI, cellJ) {
+function expandShown(board, elCell, cellI, cellJ) {
     for (var i = cellI - 1; i <= cellI + 1; i++) {
         if (i < 0 || i >= board.length) continue
         for (var j = cellJ - 1; j <= cellJ + 1; j++) {
