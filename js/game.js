@@ -2,8 +2,8 @@
 
 // TODOS - GENERAL:
 // DONE: create the model with matrix of gBoard and each cell has the following object for example: {minesAroundCount: 4,isShown: false,isMine: false,isMarked: true} 
-// TODO: create the gLevel object - gLevel = {SIZE: 4, MINES: 2}
-// TODO: create the Ggame Object - gGame = {isOn: false, shownCount: 0, markedCount: 0, secsPassed: 0}
+// DONE: create the gLevel object - gLevel = {SIZE: 4, MINES: 2}
+// DONE: create the Ggame Object - gGame = {isOn: false, shownCount: 0, markedCount: 0, secsPassed: 0}
 
 // Model
 var gBoard
@@ -28,7 +28,6 @@ function onInit() {
         SIZE: 4,
         MINES: 2
     }
-    console.log(gBoard)
 }
 
 function buildBoard() {
@@ -54,43 +53,33 @@ function buildBoard() {
 }
 
 function onCellClicked(elCell, i, j) {
-    // TODO: Called When a cell is clicked
     if (!gGame.isOn) return
-    if (gIsFirstClick) {
-        gIsFirstClick = false
-        // createMines(4)
-    }
+    var cell = gBoard[i][j]
+
+    if (cell.isMarked || cell.isShown) return
+
     elCell.classList.remove('invisible')
+    cell.isShown = true
     gGame.shownCount++
-    var pos = { i, j }
-    if (gBoard[i][j].isMine) {
-        renderCell(pos, MINE)
-        checkGameOver()
-    } else if (gBoard[i][j].minesAroundCount === 0) {
-        console.log(gBoard[i][j].minesAroundCount)
-        expandShown(gBoard, elCell, i, j)
+
+    if (cell.isMine) {
+        elCell.innerText = MINE
+        gGame.isOn = false
+        console.log('Game Over: You clicked on a mine!')
+    } else {
+        elCell.innerText = cell.minesAroundCount === 0 ? '' : cell.minesAroundCount
+        if (cell.minesAroundCount === 0) {
+            expandShown(gBoard, elCell, i, j)
+        }
     }
-    // if (gBoard[i][j].minesAroundCount === 0) {
-    // if (gBoard[i][j].minesAroundCount) {
-    //     elCell.classList.remove('invisible')
-    // }
-    //     if (gBoard[i][j].isMine) return
-    //     expandShown(gBoard, elCell, i, j)
-    // }
+    checkGameOver()
 }
 
-function onCellMarked(elCell) {
-    // DONE: Check how to hide the context menu on right click.
-    // DONE: Called when a cell is right-clicked
+function onCellMarked(elCell, i, j) {
     if (!gGame.isOn) return
-    const classArr = []
-    var arr = []
+    var cell = gBoard[i][j]
 
-    var classId = elCell.classList[1]
-    arr = classId.split('-')
-    classArr.push(arr[1], arr[2])
-
-    var cell = gBoard[classArr[0]][classArr[1]]
+    if (cell.isShown) return
 
     if (!cell.isMarked) {
         elCell.classList.remove('invisible')
@@ -100,38 +89,50 @@ function onCellMarked(elCell) {
     } else {
         elCell.classList.add('invisible')
         cell.isMarked = false
-        if (cell.isMine) {
-            cell.isMarked = false
-            elCell.innerText = MINE
-            elCell.classList.add('invisible')
-        } else {
-            cell.isMarked = false
-            elCell.innerText = cell.minesAroundCount
-            elCell.classList.add('invisible')
-        }
+        elCell.innerText = ''
+        gGame.markedCount--
     }
+    checkGameOver()
 }
 
 function checkGameOver() {
-    // TODO: Game ends when all mines are marked, and all the other cells are shown.
-    if (countCells(gBoard) === gGame.shownCount && gLevel.MINES === countMines(gBoard)) gGame.isOn = false
+    var allMinesMarked = true
+    var allCellsShown = true
+
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard[0].length; j++) {
+            var cell = gBoard[i][j]
+            if (cell.isMine && !cell.isMarked) {
+                allMinesMarked = false
+            }
+            if (!cell.isMine && !cell.isShown) {
+                allCellsShown = false
+            }
+        }
+    }
+    if (allMinesMarked && allCellsShown) {
+        gGame.isOn = false
+        console.log('Game Over: You Win!')
+    }
 }
 
-function expandShown(board, elCell, cellI, cellJ) {
-    // DONE: When User Clicks a cell with no mines aro8und, we need to open not only that cell, but also its neigbors.
-    // NOTE: Start with a basic implementation that only opens the non-mine 1st degree neighbors.
-    if (!gGame.isOn) return
+function expandShown(board, cellI, cellJ) {
     for (var i = cellI - 1; i <= cellI + 1; i++) {
         if (i < 0 || i >= board.length) continue
         for (var j = cellJ - 1; j <= cellJ + 1; j++) {
+            if (j < 0 || j >= board[0].length) continue
             if (i === cellI && j === cellJ) continue
-            if (j < 0 || j >= board.length) continue
-            if (board[i][j].isMine) continue
-
-            var className = getCellLocation(i, j)
-            elCell = document.querySelector(`.${className}`)
-            elCell.classList.remove('invisible')
-            gGame.shownCount++
+            var cell = board[i][j]
+            var elNeighborCell = document.querySelector(`.cell-${i}-${j}`)
+            if (!cell.isShown && !cell.isMine) {
+                elNeighborCell.classList.remove('invisible')
+                cell.isShown = true
+                gGame.shownCount++
+                elNeighborCell.innerText = cell.minesAroundCount === 0 ? '' : cell.minesAroundCount
+                if (cell.minesAroundCount === 0) {
+                    expandShown(board, elNeighborCell, i, j)
+                }
+            }
         }
     }
 }

@@ -7,7 +7,6 @@ function createMine() {
     if (!emptyCells) return null
     var randomCell = getRandomPos(emptyCells)
     gBoard[randomCell.i][randomCell.j].isMine = true
-    renderBoard(gBoard)
 }
 
 function createMines(amount) {
