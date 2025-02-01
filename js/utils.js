@@ -12,7 +12,7 @@ function createMat(size) {
 }
 
 function renderBoard(board) {
-    var strHTML = '<table border="0"><tbody>'
+    var strHTML = '<table><tbody>'
     for (var i = 0; i < board.length; i++) {
         strHTML += '<tr>'
         for (var j = 0; j < board[0].length; j++) {
@@ -28,8 +28,19 @@ function renderBoard(board) {
         }
         strHTML += '</tr>'
     }
-    strHTML += '</tbody></table>'
+    strHTML += '</tbody></table><div class="lives"></div>'
     const elBoard = document.querySelector('.board')
+    elBoard.innerHTML = strHTML
+}
+
+function renderLives() {
+    var elBoard = document.querySelector('.lives')
+    var strHTML = ''
+    strHTML += '<div>'
+    for (var i = 0; i < gLives; i++) {
+        strHTML += '♥️'
+    }
+    strHTML += '</div>'
     elBoard.innerHTML = strHTML
 }
 

@@ -5,6 +5,7 @@ body{
 
 table{
     margin: auto;
+    border: 0;
 }
 
 .board td {
@@ -24,4 +25,8 @@ footer{
     margin: 20px;
     font-weight: bold;
     font-family: 'Courier New', Courier, monospace;
+}
+
+.lives{
+    margin: 10px;
 }

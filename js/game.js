@@ -5,6 +5,7 @@ var gBoard
 var gIsFirstClick
 var gGame
 var gLevel
+var gLives
 
 const FLAG = '🚩'
 const MINE = '💣'
@@ -23,6 +24,8 @@ function onInit() {
         SIZE: 4,
         MINES: 2
     }
+    gLives = 3
+    renderLives()
     console.log(gBoard)
 }
 
@@ -45,6 +48,7 @@ function onCellClicked(elCell, i, j) {
         placeMines(gBoard, gLevel.MINES, { i, j })
         setMinesNegsCount(gBoard)
         renderBoard(gBoard)
+        renderLives()
     }
 
     var cell = gBoard[i][j]
@@ -55,10 +59,18 @@ function onCellClicked(elCell, i, j) {
     cell.isShown = true
     gGame.shownCount++
 
+    if (!cell.isMine) {
+        elCell.innerText = cell.minesAroundCount === 0 ? '' : cell.minesAroundCount
+        if (cell.minesAroundCount === 0) {
+            expandShown(gBoard, elCell, i, j)
+        }
+    }
     if (cell.isMine) {
         elCell.innerText = MINE
-        gGame.isOn = false
-        console.log('Game Over: You clicked on a mine!')
+        gLives--
+        console.log('MINE')
+        console.log(`Lives: ${gLives}`)
+        renderLives()
     } else {
         elCell.innerText = cell.minesAroundCount === 0 ? '' : cell.minesAroundCount
         if (cell.minesAroundCount === 0) {
@@ -91,6 +103,11 @@ function onCellMarked(elCell, i, j) {
 function checkGameOver() {
     var allMinesMarked = true
     var allCellsShown = true
+
+    if (gLives === 0) {
+        gGame.isOn = false
+        console.log('Game Over: You Lose!')
+    }
 
     for (var i = 0; i < gBoard.length; i++) {
         for (var j = 0; j < gBoard[0].length; j++) {
