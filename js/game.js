@@ -26,9 +26,6 @@ function onInit() {
     console.log(gBoard)
 }
 
-// Call onInit when the page loads
-window.onload = onInit
-
 function buildBoard() {
     const size = 4
     const board = createMat(size)
@@ -60,7 +57,6 @@ function onCellClicked(elCell, i, j) {
 
     if (cell.isMine) {
         elCell.innerText = MINE
-        // Handle game over logic if a mine is clicked
         gGame.isOn = false
         console.log('Game Over: You clicked on a mine!')
     } else {
@@ -118,7 +114,7 @@ function checkGameOver() {
     }
 }
 
-function expandShown(board, elCell, cellI, cellJ) {
+function expandShown(board, cellI, cellJ) {
     for (var i = cellI - 1; i <= cellI + 1; i++) {
         if (i < 0 || i >= board.length) continue
         for (var j = cellJ - 1; j <= cellJ + 1; j++) {
@@ -131,9 +127,7 @@ function expandShown(board, elCell, cellI, cellJ) {
                 cell.isShown = true
                 gGame.shownCount++
                 elNeighborCell.innerText = cell.minesAroundCount === 0 ? '' : cell.minesAroundCount
-                if (cell.minesAroundCount === 0) {
-                    expandShown(board, elNeighborCell, i, j)
-                }
+                if (cell.minesAroundCount === 0) expandShown(board, elNeighborCell, i, j)
             }
         }
     }
