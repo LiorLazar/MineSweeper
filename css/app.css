@@ -1,11 +1,11 @@
 body{
-    background-color: rgb(6, 216, 220);
     text-align: center;
 }
 
 table{
     margin: auto;
     border: 0;
+    background-color: grey;
 }
 
 .board td {
@@ -18,7 +18,7 @@ table{
 
 .invisible{
     text-indent: -9999px;
-    box-shadow: 10px 5px 5px rgb(6, 158, 150);
+    box-shadow: 10px 5px 5px rgb(0, 0, 0);
 }
 
 footer{
@@ -29,4 +29,8 @@ footer{
 
 .lives{
     margin: 10px;
+}
+
+button{
+    margin: 5px
 }

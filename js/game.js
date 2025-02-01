@@ -4,7 +4,7 @@
 var gBoard
 var gIsFirstClick
 var gGame
-var gLevel
+var gLevel = { SIZE: 4, MINES: 2 }
 var gLives
 
 const FLAG = '🚩'
@@ -20,17 +20,13 @@ function onInit() {
         markedCount: 0,
         secsPassed: 0
     }
-    gLevel = {
-        SIZE: 4,
-        MINES: 2
-    }
     gLives = 3
     renderLives()
-    console.log(gBoard)
+    renderSmiley('😃')
 }
 
 function buildBoard() {
-    const size = 4
+    const size = gLevel.SIZE
     const board = createMat(size)
     for (var i = 0; i < board.length; i++) {
         for (var j = 0; j < board[0].length; j++) {
@@ -49,6 +45,7 @@ function onCellClicked(elCell, i, j) {
         setMinesNegsCount(gBoard)
         renderBoard(gBoard)
         renderLives()
+        renderSmiley('😃')
     }
 
     var cell = gBoard[i][j]
@@ -105,6 +102,7 @@ function checkGameOver() {
     var allCellsShown = true
 
     if (gLives === 0) {
+        renderSmiley('🤯')
         gGame.isOn = false
         console.log('Game Over: You Lose!')
     }
@@ -126,6 +124,7 @@ function checkGameOver() {
     // console.log(`allMinesMarked: ${allMinesMarked}, allCellsShown: ${allCellsShown}`)
 
     if (allMinesMarked && allCellsShown) {
+        renderSmiley('😎')
         gGame.isOn = false
         console.log('Game Over: You Win!')
     }

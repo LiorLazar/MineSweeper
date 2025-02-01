@@ -12,7 +12,7 @@ function createMat(size) {
 }
 
 function renderBoard(board) {
-    var strHTML = '<table><tbody>'
+    var strHTML = '<button onclick=onInit() class="smiley"></button><table><tbody>'
     for (var i = 0; i < board.length; i++) {
         strHTML += '<tr>'
         for (var j = 0; j < board[0].length; j++) {
@@ -28,9 +28,29 @@ function renderBoard(board) {
         }
         strHTML += '</tr>'
     }
-    strHTML += '</tbody></table><div class="lives"></div>'
+    strHTML += '</tbody></table>'
+    strHTML += '<div class="lives"></div>'
+    strHTML += '<button onclick="setDifficulty(this)">Beginner</button>'
+    strHTML += '<button onclick="setDifficulty(this)">Medium</button>'
+    strHTML += '<button onclick="setDifficulty(this)">Expert</button>'
     const elBoard = document.querySelector('.board')
     elBoard.innerHTML = strHTML
+}
+
+function setDifficulty(elBtn) {
+    var difficulty = elBtn.innerText
+    switch (difficulty) {
+        case 'Beginner':
+            gLevel = { SIZE: 4, MINES: 2 }
+            break
+        case 'Medium':
+            gLevel = { SIZE: 8, MINES: 14 }
+            break
+        case 'Expert':
+            gLevel = { SIZE: 12, MINES: 32 }
+            break
+    }
+    onInit()
 }
 
 function renderLives() {
@@ -42,6 +62,11 @@ function renderLives() {
     }
     strHTML += '</div>'
     elBoard.innerHTML = strHTML
+}
+
+function renderSmiley(smiley) {
+    var elSmiley = document.querySelector('.smiley')
+    elSmiley.innerHTML = smiley
 }
 
 function renderCell(location, value) {
