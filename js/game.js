@@ -132,7 +132,7 @@ function checkGameOver() {
         renderSmiley('😎')
         gGame.isOn = false
         alert('Game Over: You Win!')
-git     }
+    }
 }
 
 function expandShown(board, cellI, cellJ) {
