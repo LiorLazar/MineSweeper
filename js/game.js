@@ -38,16 +38,10 @@ function buildBoard() {
 }
 
 function onCellClicked(elCell, i, j) {
-    console.log(`Cell clicked: (${i}, ${j})`)
-    if (!gGame.isOn) {
-        console.log('Game is not on')
-        return
-    }
+    // console.log(`Cell clicked: (${i}, ${j})`)
+    if (!gGame.isOn) return
     var cell = gBoard[i][j]
-    if (cell.isMarked || cell.isShown) {
-        console.log('Cell is marked or shown')
-        return
-    }
+    if (cell.isMarked || cell.isShown) return
 
     if (gIsFirstClick) {
         gIsFirstClick = false
@@ -57,7 +51,6 @@ function onCellClicked(elCell, i, j) {
         renderLives()
         renderSmiley('😃')
         console.log('First click: Mines placed and board rendered')
-        // Reassign elCell after re-rendering the board
         elCell = document.querySelector(`.cell-${i}-${j}`)
         startTimer()
     }
@@ -65,7 +58,6 @@ function onCellClicked(elCell, i, j) {
     elCell.classList.remove('invisible')
     cell.isShown = true
     gGame.shownCount++
-    console.log(`Cell shown count: ${gGame.shownCount}`)
 
     if (!cell.isMine) {
         elCell.innerText = cell.minesAroundCount === 0 ? '' : cell.minesAroundCount
@@ -110,7 +102,6 @@ function checkGameOver() {
         gGame.isOn = false
         alert('Game Over: You Lose!')
         clearInterval(gTimerInterval)
-        // console.log('Game Over: You Lose!')
     }
 
     for (var i = 0; i < gBoard.length; i++) {
@@ -118,16 +109,13 @@ function checkGameOver() {
             var cell = gBoard[i][j]
             if (cell.isMine && !cell.isMarked) {
                 allMinesMarked = false
-                // console.log(`Mine at (${i}, ${j}) is not marked`)
             }
             if (!cell.isMine && !cell.isShown) {
                 allCellsShown = false
-                // console.log(`Cell at (${i}, ${j}) is not shown`)
             }
         }
     }
 
-    // console.log(`allMinesMarked: ${allMinesMarked}, allCellsShown: ${allCellsShown}`)
 
     if (allMinesMarked && allCellsShown) {
         renderSmiley('😎')
@@ -154,13 +142,4 @@ function expandShown(board, cellI, cellJ) {
             }
         }
     }
-}
-
-function startTimer() {
-    var elTimer = document.querySelector('.timer')
-    var startTime = Date.now()
-    gTimerInterval = setInterval(function () {
-        var timePassed = Date.now() - startTime
-        elTimer.innerText = (timePassed / 1000).toFixed(3)
-    }, 1)
 }

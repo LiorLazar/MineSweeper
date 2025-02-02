@@ -130,3 +130,12 @@ function countCells(board) {
 function getCellLocation(i, j) {
     return `cell-${i}-${j}`
 }
+
+function startTimer() {
+    var elTimer = document.querySelector('.timer')
+    var startTime = Date.now()
+    gTimerInterval = setInterval(function () {
+        var timePassed = Date.now() - startTime
+        elTimer.innerText = (timePassed / 1000).toFixed(3)
+    }, 1)
+}
