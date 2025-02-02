@@ -6,6 +6,7 @@ var gIsFirstClick
 var gGame
 var gLevel = { SIZE: 4, MINES: 2 }
 var gLives
+var gTimerInterval
 
 const FLAG = '🚩'
 const MINE = '💣'
@@ -51,7 +52,7 @@ function onCellClicked(elCell, i, j) {
         renderSmiley('😃')
         // console.log('First click: Mines placed and board rendered')
         elCell = document.querySelector(`.cell-${i}-${j}`)
-
+        startTimer()
     }
 
 
@@ -107,8 +108,9 @@ function checkGameOver() {
 
     if (gLives === 0) {
         renderSmiley('🤯')
-        // gGame.isOn = false
+        gGame.isOn = false
         alert('Game Over: You Lose!')
+        clearInterval(gTimerInterval)
         // console.log('Game Over: You Lose!')
     }
 
@@ -131,6 +133,7 @@ function checkGameOver() {
     if (allMinesMarked && allCellsShown) {
         renderSmiley('😎')
         gGame.isOn = false
+        clearInterval(gTimerInterval)
         alert('Game Over: You Win!')
     }
 }
@@ -152,4 +155,13 @@ function expandShown(board, cellI, cellJ) {
             }
         }
     }
+}
+
+function startTimer() {
+    var elTimer = document.querySelector('.timer')
+    var startTime = Date.now()
+    gTimerInterval = setInterval(function () {
+        var timePassed = Date.now() - startTime
+        elTimer.innerText = (timePassed / 1000).toFixed(3)
+    }, 1)
 }
