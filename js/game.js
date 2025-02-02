@@ -37,7 +37,10 @@ function buildBoard() {
 }
 
 function onCellClicked(elCell, i, j) {
+    // console.log(`Cell clicked: (${i}, ${j})`)
     if (!gGame.isOn) return
+    var cell = gBoard[i][j]
+    if (cell.isMarked || cell.isShown) return
 
     if (gIsFirstClick) {
         gIsFirstClick = false
@@ -46,11 +49,12 @@ function onCellClicked(elCell, i, j) {
         renderBoard(gBoard)
         renderLives()
         renderSmiley('😃')
+        // console.log('First click: Mines placed and board rendered')
+        elCell = document.querySelector(`.cell-${i}-${j}`)
+
     }
 
-    var cell = gBoard[i][j]
 
-    if (cell.isMarked || cell.isShown) return
 
     elCell.classList.remove('invisible')
     cell.isShown = true
@@ -65,8 +69,8 @@ function onCellClicked(elCell, i, j) {
     if (cell.isMine) {
         elCell.innerText = MINE
         gLives--
-        console.log('MINE')
-        console.log(`Lives: ${gLives}`)
+        // console.log('MINE')
+        // console.log(`Lives: ${gLives}`)
         renderLives()
     } else {
         elCell.innerText = cell.minesAroundCount === 0 ? '' : cell.minesAroundCount
@@ -103,8 +107,9 @@ function checkGameOver() {
 
     if (gLives === 0) {
         renderSmiley('🤯')
-        gGame.isOn = false
-        console.log('Game Over: You Lose!')
+        // gGame.isOn = false
+        alert('Game Over: You Lose!')
+        // console.log('Game Over: You Lose!')
     }
 
     for (var i = 0; i < gBoard.length; i++) {
@@ -126,8 +131,8 @@ function checkGameOver() {
     if (allMinesMarked && allCellsShown) {
         renderSmiley('😎')
         gGame.isOn = false
-        console.log('Game Over: You Win!')
-    }
+        alert('Game Over: You Win!')
+git     }
 }
 
 function expandShown(board, cellI, cellJ) {
