@@ -38,10 +38,16 @@ function buildBoard() {
 }
 
 function onCellClicked(elCell, i, j) {
-    // console.log(`Cell clicked: (${i}, ${j})`)
-    if (!gGame.isOn) return
+    console.log(`Cell clicked: (${i}, ${j})`)
+    if (!gGame.isOn) {
+        console.log('Game is not on')
+        return
+    }
     var cell = gBoard[i][j]
-    if (cell.isMarked || cell.isShown) return
+    if (cell.isMarked || cell.isShown) {
+        console.log('Cell is marked or shown')
+        return
+    }
 
     if (gIsFirstClick) {
         gIsFirstClick = false
@@ -50,34 +56,27 @@ function onCellClicked(elCell, i, j) {
         renderBoard(gBoard)
         renderLives()
         renderSmiley('😃')
-        // console.log('First click: Mines placed and board rendered')
+        console.log('First click: Mines placed and board rendered')
+        // Reassign elCell after re-rendering the board
         elCell = document.querySelector(`.cell-${i}-${j}`)
         startTimer()
     }
 
-
-
     elCell.classList.remove('invisible')
     cell.isShown = true
     gGame.shownCount++
+    console.log(`Cell shown count: ${gGame.shownCount}`)
 
     if (!cell.isMine) {
         elCell.innerText = cell.minesAroundCount === 0 ? '' : cell.minesAroundCount
         if (cell.minesAroundCount === 0) {
-            expandShown(gBoard, elCell, i, j)
+            expandShown(gBoard, i, j)
         }
-    }
-    if (cell.isMine) {
+    } else {
         elCell.innerText = MINE
         gLives--
-        // console.log('MINE')
-        // console.log(`Lives: ${gLives}`)
         renderLives()
-    } else {
-        elCell.innerText = cell.minesAroundCount === 0 ? '' : cell.minesAroundCount
-        if (cell.minesAroundCount === 0) {
-            expandShown(gBoard, elCell, i, j)
-        }
+        console.log(`Mine clicked: Lives left ${gLives}`)
     }
     checkGameOver()
 }
