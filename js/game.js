@@ -7,6 +7,9 @@ var gGame
 var gLevel = { SIZE: 4, MINES: 2 }
 var gLives
 var gTimerInterval
+var gBestTime
+var gHints
+var gIsHintActive
 
 const FLAG = '🚩'
 const MINE = '💣'
@@ -22,8 +25,11 @@ function onInit() {
         secsPassed: 0
     }
     gLives = 3
+    gHints = 3
     renderLives()
+    renderHints()
     renderSmiley('😃')
+    gIsHintActive = false
 }
 
 function buildBoard() {
@@ -43,14 +49,24 @@ function onCellClicked(elCell, i, j) {
     var cell = gBoard[i][j]
     if (cell.isMarked || cell.isShown) return
 
+    if (gIsHintActive) {
+        revealHint(i, j)
+        gIsHintActive = false
+        const activeHint = document.querySelector(`.hint.active`)
+        if (activeHint) activeHint.classList.remove('active')
+        else console.log('Active hint element not found')
+        return
+    }
+
     if (gIsFirstClick) {
         gIsFirstClick = false
         placeMines(gBoard, gLevel.MINES, { i, j })
         setMinesNegsCount(gBoard)
         renderBoard(gBoard)
         renderLives()
+        renderHints()
         renderSmiley('😃')
-        console.log('First click: Mines placed and board rendered')
+        // console.log('First click: Mines placed and board rendered')
         elCell = document.querySelector(`.cell-${i}-${j}`)
         startTimer()
     }
@@ -71,6 +87,44 @@ function onCellClicked(elCell, i, j) {
         console.log(`Mine clicked: Lives left ${gLives}`)
     }
     checkGameOver()
+}
+
+function onHintClicked(elHint) {
+    if (!gGame.isOn || gHints === 0) return
+    gIsHintActive = true
+    elHint.classList.add('active')
+    console.dir(elHint)
+    console.log('Hint mode activated. Click on a cell to reveal.')
+}
+
+function revealHint(cellI, cellJ) {
+    for (var i = cellI - 1; i <= cellI + 1; i++) {
+        if (i < 0 || i >= gBoard.length) continue
+        for (var j = cellJ - 1; j <= cellJ + 1; j++) {
+            if (j < 0 || j >= gBoard[0].length) continue
+            var cell = gBoard[i][j]
+            var elCell = document.querySelector(`.cell-${i}-${j}`)
+            elCell.classList.remove('invisible')
+            elCell.innerText = cell.isMine ? MINE : (cell.minesAroundCount === 0 ? '' : cell.minesAroundCount)
+        }
+    }
+    gHints--
+    renderHints()
+
+    setTimeout(function () {
+        for (var i = cellI - 1; i <= cellI + 1; i++) {
+            if (i < 0 || i >= gBoard.length) continue
+            for (var j = cellJ - 1; j <= cellJ + 1; j++) {
+                if (j < 0 || j >= gBoard[0].length) continue
+                var cell = gBoard[i][j]
+                var elCell = document.querySelector(`.cell-${i}-${j}`)
+                if (!cell.isShown) {
+                    elCell.classList.add('invisible')
+                    elCell.innerText = ''
+                }
+            }
+        }
+    }, 1000)
 }
 
 function onCellMarked(elCell, i, j) {
@@ -97,13 +151,6 @@ function checkGameOver() {
     var allMinesMarked = true
     var allCellsShown = true
 
-    if (gLives === 0) {
-        renderSmiley('🤯')
-        gGame.isOn = false
-        alert('Game Over: You Lose!')
-        clearInterval(gTimerInterval)
-    }
-
     for (var i = 0; i < gBoard.length; i++) {
         for (var j = 0; j < gBoard[0].length; j++) {
             var cell = gBoard[i][j]
@@ -116,11 +163,30 @@ function checkGameOver() {
         }
     }
 
+    if (allCellsShown) {
+        renderSmiley('😎')
+        gGame.isOn = false
+        clearInterval(gTimerInterval)
+        gBestTime = document.querySelector('.timer').innerHTML
+        storeData(gBestTime)
+        alert('Game Over: You Win!')
+    } else if (gLives === 0) {
+        renderSmiley('🤯')
+        gGame.isOn = false
+        clearInterval(gTimerInterval)
+        gBestTime = document.querySelector('.timer').innerHTML
+        storeData(gBestTime)
+        alert('Game Over: You Lose!')
+    }
+
+
 
     if (allMinesMarked && allCellsShown) {
         renderSmiley('😎')
         gGame.isOn = false
         clearInterval(gTimerInterval)
+        gBestTime = document.querySelector('.timer').innerHTML
+        storeData(gBestTime)
         alert('Game Over: You Win!')
     }
 }

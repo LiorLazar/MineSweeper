@@ -30,10 +30,12 @@ function renderBoard(board) {
     }
     strHTML += '</tbody></table>'
     strHTML += '<div class="lives"></div>'
+    strHTML += '<div class="hints"></div>'
     strHTML += '<button onclick="setDifficulty(this)">Beginner</button>'
     strHTML += '<button onclick="setDifficulty(this)">Medium</button>'
     strHTML += '<button onclick="setDifficulty(this)">Expert</button>'
     strHTML += '<div class="timer">0.00</div>'
+    strHTML += '<div class="bestTime">Best Time Table:</div>'
     const elBoard = document.querySelector('.board')
     elBoard.innerHTML = strHTML
 }
@@ -55,14 +57,25 @@ function setDifficulty(elBtn) {
 }
 
 function renderLives() {
-    var elBoard = document.querySelector('.lives')
+    var elLives = document.querySelector('.lives')
     var strHTML = ''
     strHTML += '<div>'
     for (var i = 0; i < gLives; i++) {
         strHTML += '♥️'
     }
     strHTML += '</div>'
-    elBoard.innerHTML = strHTML
+    elLives.innerHTML = strHTML
+}
+
+function renderHints() {
+    var elHints = document.querySelector('.hints')
+    var strHTML = ''
+    strHTML += '<div>'
+    for (var i = 1; i < gHints + 1; i++) {
+        strHTML += `<button class=hint onclick=onHintClicked(this)>💡</button>`
+    }
+    strHTML += '</div>'
+    elHints.innerHTML = strHTML
 }
 
 function renderSmiley(smiley) {
@@ -139,3 +152,24 @@ function startTimer() {
         elTimer.innerText = (timePassed / 1000).toFixed(3)
     }, 1)
 }
+
+function storeData(gBestTime) {
+    if (!typeof (Storage) !== 'undefined') return
+    const bestTime = []
+    localStorage.setItem('bestTime', gBestTime)
+    gBestTime.push(bestTime)
+    renderBestScore(bestTime)
+    return bestTime
+}
+
+function renderBestScore(bestScores) {
+    var elBestTime = document.querySelector('.bestTime')
+    var strHTML = '<br>'
+    bestScores.sort()
+
+    for (var i = 0; i < bestScores.length; i++) {
+        strHTML += `${bestScores[i]} <br />`
+    }
+    elBestTime.innerHTML = strHTML
+}
+
