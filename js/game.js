@@ -30,6 +30,7 @@ function onInit() {
     renderHints()
     renderSmiley('😃')
     gIsHintActive = false
+    storeData()
 }
 
 function buildBoard() {
@@ -93,8 +94,8 @@ function onHintClicked(elHint) {
     if (!gGame.isOn || gHints === 0) return
     gIsHintActive = true
     elHint.classList.add('active')
-    console.dir(elHint)
-    console.log('Hint mode activated. Click on a cell to reveal.')
+    // console.dir(elHint)
+    // console.log('Hint mode activated. Click on a cell to reveal.')
 }
 
 function revealHint(cellI, cellJ) {

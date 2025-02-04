@@ -42,15 +42,19 @@ function renderBoard(board) {
 
 function setDifficulty(elBtn) {
     var difficulty = elBtn.innerText
+    const elBoard = document.querySelector('.board')
     switch (difficulty) {
         case 'Beginner':
             gLevel = { SIZE: 4, MINES: 2 }
+            elBoard.classList.add('beginner')
             break
         case 'Medium':
             gLevel = { SIZE: 8, MINES: 14 }
+            elBoard.classList.add('medium')
             break
         case 'Expert':
             gLevel = { SIZE: 12, MINES: 32 }
+            elBoard.classList.add('expert')
             break
     }
     onInit()
@@ -151,25 +155,5 @@ function startTimer() {
         var timePassed = Date.now() - startTime
         elTimer.innerText = (timePassed / 1000).toFixed(3)
     }, 1)
-}
-
-function storeData(gBestTime) {
-    if (!typeof (Storage) !== 'undefined') return
-    const bestTime = []
-    localStorage.setItem('bestTime', gBestTime)
-    gBestTime.push(bestTime)
-    renderBestScore(bestTime)
-    return bestTime
-}
-
-function renderBestScore(bestScores) {
-    var elBestTime = document.querySelector('.bestTime')
-    var strHTML = '<br>'
-    bestScores.sort()
-
-    for (var i = 0; i < bestScores.length; i++) {
-        strHTML += `${bestScores[i]} <br />`
-    }
-    elBestTime.innerHTML = strHTML
 }
 
