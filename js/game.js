@@ -7,7 +7,6 @@ var gGame
 var gLevel = { SIZE: 4, MINES: 2 }
 var gLives
 var gTimerInterval
-var gBestTime
 var gHints
 var gIsHintActive
 
@@ -30,7 +29,6 @@ function onInit() {
     renderHints()
     renderSmiley('😃')
     gIsHintActive = false
-    storeData()
 }
 
 function buildBoard() {
@@ -175,8 +173,6 @@ function checkGameOver() {
         renderSmiley('🤯')
         gGame.isOn = false
         clearInterval(gTimerInterval)
-        gBestTime = document.querySelector('.timer').innerHTML
-        storeData(gBestTime)
         alert('Game Over: You Lose!')
     }
 
@@ -186,8 +182,6 @@ function checkGameOver() {
         renderSmiley('😎')
         gGame.isOn = false
         clearInterval(gTimerInterval)
-        gBestTime = document.querySelector('.timer').innerHTML
-        storeData(gBestTime)
         alert('Game Over: You Win!')
     }
 }

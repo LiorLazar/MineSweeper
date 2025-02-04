@@ -35,7 +35,6 @@ function renderBoard(board) {
     strHTML += '<button onclick="setDifficulty(this)">Medium</button>'
     strHTML += '<button onclick="setDifficulty(this)">Expert</button>'
     strHTML += '<div class="timer">0.00</div>'
-    strHTML += '<div class="bestTime">Best Time Table:</div>'
     const elBoard = document.querySelector('.board')
     elBoard.innerHTML = strHTML
 }
