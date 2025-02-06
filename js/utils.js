@@ -87,6 +87,13 @@ function renderSmiley(smiley) {
     elSmiley.innerHTML = smiley
 }
 
+function renderSafeClicksCount() {
+    var elSafeClicks = document.querySelector('.safe-clicks')
+    var strHTML = ''
+    strHTML += `<div>${gGame.safeClicks} clicks available </div>`
+    elSafeClicks.innerHTML = strHTML
+}
+
 function renderCell(location, value) {
     const elCell = document.querySelector(`.cell-${location.i}-${location.j}`)
     elCell.innerHTML = value

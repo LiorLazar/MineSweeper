@@ -11,6 +11,7 @@ const MINE = '💣'
 function onInit() {
     setDifficulty('beginner')
     startGame()
+    renderSafeClicksCount()
 }
 
 function resetGame() {
@@ -25,7 +26,8 @@ function resetGame() {
         isHintActive: false,
         isFirstClick: true,
         level: gGame ? gGame.level : { SIZE: 4, MINES: 2 },
-        difficulty: 'Beginner'
+        difficulty: 'Beginner',
+        safeClicks: 3
     }
     gBoard = buildBoard()
 }
@@ -217,3 +219,38 @@ function expandShown(board, cellI, cellJ) {
         }
     }
 }
+
+function safeClick() {
+    if (!gGame.isOn) return
+    if (gGame.safeClicks === 0) {
+        alert('No more safe clicks available')
+        return
+    }
+
+    const safeCells = []
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard[i].length; j++) {
+            const cell = gBoard[i][j]
+            if (!cell.isMine && !cell.isShown) safeCells.push({ i, j })
+        }
+    }
+
+    if (safeCells.length === 0) {
+        alert('No safe cells to click')
+        return
+    }
+
+    var randomCell = getRandomIntInclusive(0, safeCells.length - 1)
+    console.log("🚀 ~ safeClick ~ randomCell:", randomCell)
+    var randomCellClass = getCellLocation(safeCells[randomCell].i, safeCells[randomCell].j)
+    console.log("🚀 ~ safeClick ~ randomCellClass:", randomCellClass)
+    var elCell = document.querySelector(`.${randomCellClass}`)
+    elCell.style.backgroundColor = 'lightgreen'
+    console.log("🚀 ~ safeClick ~ elCell:", elCell)
+    gGame.safeClicks--
+    renderSafeClicksCount()
+
+    setTimeout(() => {
+        elCell.style.backgroundColor = 'grey'
+    }, 1000);
+}   
