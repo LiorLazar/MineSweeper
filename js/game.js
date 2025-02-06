@@ -2,13 +2,9 @@
 
 // Model
 var gBoard
-var gIsFirstClick
 var gGame
 var gLevel = { SIZE: 4, MINES: 2 }
-var gLives
 var gTimerInterval
-var gHints
-var gIsHintActive
 
 const FLAG = '🚩'
 const MINE = '💣'
@@ -16,19 +12,23 @@ const MINE = '💣'
 function onInit() {
     gBoard = buildBoard()
     renderBoard(gBoard)
-    gIsFirstClick = true
+    resetGame()
+    renderLives()
+    renderHints()
+    renderSmiley('😃')
+}
+
+function resetGame() {
     gGame = {
         isOn: true,
         shownCount: 0,
         markedCount: 0,
-        secsPassed: 0
+        secsPassed: 0,
+        lives: 3,
+        hints: 3,
+        isHintActive: false,
+        isFirstClick: true
     }
-    gLives = 3
-    gHints = 3
-    renderLives()
-    renderHints()
-    renderSmiley('😃')
-    gIsHintActive = false
 }
 
 function buildBoard() {

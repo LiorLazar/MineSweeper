@@ -29,12 +29,6 @@ function renderBoard(board) {
         strHTML += '</tr>'
     }
     strHTML += '</tbody></table>'
-    strHTML += '<div class="lives"></div>'
-    strHTML += '<div class="hints"></div>'
-    strHTML += '<button onclick="setDifficulty(this)">Beginner</button>'
-    strHTML += '<button onclick="setDifficulty(this)">Medium</button>'
-    strHTML += '<button onclick="setDifficulty(this)">Expert</button>'
-    strHTML += '<div class="timer">0.00</div>'
     const elBoard = document.querySelector('.board')
     elBoard.innerHTML = strHTML
 }
@@ -63,7 +57,7 @@ function renderLives() {
     var elLives = document.querySelector('.lives')
     var strHTML = ''
     strHTML += '<div>'
-    for (var i = 0; i < gLives; i++) {
+    for (var i = 0; i < gGame.lives; i++) {
         strHTML += '♥️'
     }
     strHTML += '</div>'
@@ -74,7 +68,7 @@ function renderHints() {
     var elHints = document.querySelector('.hints')
     var strHTML = ''
     strHTML += '<div>'
-    for (var i = 1; i < gHints + 1; i++) {
+    for (var i = 1; i < gGame.hints + 1; i++) {
         strHTML += `<button class=hint onclick=onHintClicked(this)>💡</button>`
     }
     strHTML += '</div>'
