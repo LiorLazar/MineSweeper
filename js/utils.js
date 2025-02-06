@@ -16,8 +16,8 @@ function renderBoard(board) {
     for (var i = 0; i < board.length; i++) {
         strHTML += '<tr>'
         for (var j = 0; j < board[0].length; j++) {
-            var cell = board[i][j]
-            var className = `cell cell-${i}-${j}`
+            const cell = board[i][j]
+            const className = `cell cell-${i}-${j}`
             var cellContent = cell.isMine ? MINE : (cell.minesAroundCount === 0 ? '' : cell.minesAroundCount)
             strHTML += `<td 
                         class="${className} invisible" 
@@ -33,24 +33,28 @@ function renderBoard(board) {
     elBoard.innerHTML = strHTML
 }
 
-function setDifficulty(elBtn) {
-    var difficulty = elBtn.innerText
+function setDifficulty(difficulty) {
     const elBoard = document.querySelector('.board')
+    elBoard.className = 'board'
     switch (difficulty) {
         case 'Beginner':
-            gLevel = { SIZE: 4, MINES: 2 }
+            gGame.level = { SIZE: 4, MINES: 2 }
+            gGame.lives = 2
             elBoard.classList.add('beginner')
             break
         case 'Medium':
-            gLevel = { SIZE: 8, MINES: 14 }
+            gGame.level = { SIZE: 8, MINES: 14 }
+            console.log(gGame.level)
+            gGame.lives = 3
             elBoard.classList.add('medium')
             break
         case 'Expert':
-            gLevel = { SIZE: 12, MINES: 32 }
+            gGame.level = { SIZE: 12, MINES: 32 }
+            gGame.lives = 3
             elBoard.classList.add('expert')
             break
     }
-    onInit()
+    startGame()
 }
 
 function renderLives() {

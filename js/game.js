@@ -3,19 +3,14 @@
 // Model
 var gBoard
 var gGame
-var gLevel = { SIZE: 4, MINES: 2 }
 var gTimerInterval
 
 const FLAG = '🚩'
 const MINE = '💣'
 
 function onInit() {
-    gBoard = buildBoard()
-    renderBoard(gBoard)
-    resetGame()
-    renderLives()
-    renderHints()
-    renderSmiley('😃')
+    setDifficulty('beginner')
+    startGame()
 }
 
 function resetGame() {
@@ -24,15 +19,25 @@ function resetGame() {
         shownCount: 0,
         markedCount: 0,
         secsPassed: 0,
-        lives: 3,
+        lives: gGame ? gGame.lives : 2,
         hints: 3,
         isHintActive: false,
-        isFirstClick: true
+        isFirstClick: true,
+        level: gGame ? gGame.level : { SIZE: 4, MINES: 2 }
     }
+    gBoard = buildBoard()
+}
+
+function startGame() {
+    resetGame()
+    renderBoard(gBoard)
+    renderLives()
+    renderHints()
+    renderSmiley('😃')
 }
 
 function buildBoard() {
-    const size = gLevel.SIZE
+    const size = gGame.level.SIZE
     const board = createMat(size)
     for (var i = 0; i < board.length; i++) {
         for (var j = 0; j < board[0].length; j++) {
@@ -48,7 +53,7 @@ function onCellClicked(elCell, i, j) {
     var cell = gBoard[i][j]
     if (cell.isMarked || cell.isShown) return
 
-    if (gIsHintActive) {
+    if (gGame.isHintActive) {
         revealHint(i, j)
         gIsHintActive = false
         const activeHint = document.querySelector(`.hint.active`)
@@ -57,9 +62,9 @@ function onCellClicked(elCell, i, j) {
         return
     }
 
-    if (gIsFirstClick) {
-        gIsFirstClick = false
-        placeMines(gBoard, gLevel.MINES, { i, j })
+    if (gGame.isFirstClick) {
+        gGame.isFirstClick = false
+        placeMines(gBoard, gGame.level.MINES, { i, j })
         setMinesNegsCount(gBoard)
         renderBoard(gBoard)
         renderLives()
@@ -81,15 +86,15 @@ function onCellClicked(elCell, i, j) {
         }
     } else {
         elCell.innerText = MINE
-        gLives--
+        gGame.lives--
         renderLives()
-        console.log(`Mine clicked: Lives left ${gLives}`)
+        console.log(`Mine clicked: Lives left ${gGame.lives}`)
     }
     checkGameOver()
 }
 
 function onHintClicked(elHint) {
-    if (!gGame.isOn || gHints === 0) return
+    if (!gGame.isOn || gGame.hints === 0) return
     gIsHintActive = true
     elHint.classList.add('active')
     // console.dir(elHint)
@@ -107,10 +112,10 @@ function revealHint(cellI, cellJ) {
             elCell.innerText = cell.isMine ? MINE : (cell.minesAroundCount === 0 ? '' : cell.minesAroundCount)
         }
     }
-    gHints--
+    gGame.hints--
     renderHints()
 
-    setTimeout(function () {
+    setTimeout(() => {
         for (var i = cellI - 1; i <= cellI + 1; i++) {
             if (i < 0 || i >= gBoard.length) continue
             for (var j = cellJ - 1; j <= cellJ + 1; j++) {
@@ -166,10 +171,10 @@ function checkGameOver() {
         renderSmiley('😎')
         gGame.isOn = false
         clearInterval(gTimerInterval)
-        gBestTime = document.querySelector('.timer').innerHTML
-        storeData(gBestTime)
+        // gBestTime = document.querySelector('.timer').innerHTML
+        // storeData(gBestTime)
         alert('Game Over: You Win!')
-    } else if (gLives === 0) {
+    } else if (gGame.lives === 0) {
         renderSmiley('🤯')
         gGame.isOn = false
         clearInterval(gTimerInterval)
