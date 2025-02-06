@@ -14,16 +14,18 @@ function onInit() {
 }
 
 function resetGame() {
+    const defaultLives = gGame && gGame.level ? (gGame.level.SIZE === 4 ? 2 : 3) : 2
     gGame = {
         isOn: true,
         shownCount: 0,
         markedCount: 0,
         secsPassed: 0,
-        lives: gGame ? gGame.lives : 2,
+        lives: defaultLives,
         hints: 3,
         isHintActive: false,
         isFirstClick: true,
-        level: gGame ? gGame.level : { SIZE: 4, MINES: 2 }
+        level: gGame ? gGame.level : { SIZE: 4, MINES: 2 },
+        difficulty: 'Beginner'
     }
     gBoard = buildBoard()
 }
@@ -48,7 +50,7 @@ function buildBoard() {
 }
 
 function onCellClicked(elCell, i, j) {
-    // console.log(`Cell clicked: (${i}, ${j})`)
+    console.log(`Cell clicked: (${i}, ${j})`)
     if (!gGame.isOn) return
     var cell = gBoard[i][j]
     if (cell.isMarked || cell.isShown) return
@@ -174,12 +176,15 @@ function checkGameOver() {
         // gBestTime = document.querySelector('.timer').innerHTML
         // storeData(gBestTime)
         alert('Game Over: You Win!')
+        setDifficulty(gGame.difficulty)
+
     } else if (gGame.lives === 0) {
         renderSmiley('🤯')
         gGame.isOn = false
         clearInterval(gTimerInterval)
-        alert('Game Over: You Lose!')
         showMines()
+        alert('Game Over: You Lose!')
+        // setDifficulty(gGame.difficulty)
     }
 
 
@@ -189,6 +194,7 @@ function checkGameOver() {
         gGame.isOn = false
         clearInterval(gTimerInterval)
         alert('Game Over: You Win!')
+        // setDifficulty(gGame.difficulty)
     }
 
 }
@@ -199,15 +205,15 @@ function expandShown(board, cellI, cellJ) {
         for (var j = cellJ - 1; j <= cellJ + 1; j++) {
             if (j < 0 || j >= board[0].length) continue
             if (i === cellI && j === cellJ) continue
-            var cell = board[i][j]
+            const cell = board[i][j]
             var elNeighborCell = document.querySelector(`.cell-${i}-${j}`)
             if (!cell.isShown && !cell.isMine) {
                 elNeighborCell.classList.remove('invisible')
                 cell.isShown = true
                 gGame.shownCount++
                 elNeighborCell.innerText = cell.minesAroundCount === 0 ? '' : cell.minesAroundCount
+                if (cell.minesAroundCount === 0) expandShown(board, i, j)
             }
-            if (cell.minesAroundCount === 0) expandShown(board, elNeighborCell, i, j)
         }
     }
 }

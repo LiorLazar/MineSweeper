@@ -38,17 +38,20 @@ function setDifficulty(difficulty) {
     elBoard.className = 'board'
     switch (difficulty) {
         case 'Beginner':
+            gGame.difficulty = 'Beginner'
             gGame.level = { SIZE: 4, MINES: 2 }
             gGame.lives = 2
             elBoard.classList.add('beginner')
             break
         case 'Medium':
+            gGame.difficulty = 'Medium'
             gGame.level = { SIZE: 8, MINES: 14 }
             console.log(gGame.level)
             gGame.lives = 3
             elBoard.classList.add('medium')
             break
         case 'Expert':
+            gGame.difficulty = 'Expert'
             gGame.level = { SIZE: 12, MINES: 32 }
             gGame.lives = 3
             elBoard.classList.add('expert')
