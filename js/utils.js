@@ -154,3 +154,15 @@ function startTimer() {
     }, 1)
 }
 
+function showMines() {
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard[i].length; j++) {
+            const cell = gBoard[i][j]
+            if (cell.isMine) {
+                var elCell = document.querySelector(`.cell-${i}-${j}`)
+                elCell.classList.remove('invisible')
+                // elCell.innerText = MINE
+            }
+        }
+    }
+}

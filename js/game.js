@@ -179,6 +179,7 @@ function checkGameOver() {
         gGame.isOn = false
         clearInterval(gTimerInterval)
         alert('Game Over: You Lose!')
+        showMines()
     }
 
 
@@ -189,6 +190,7 @@ function checkGameOver() {
         clearInterval(gTimerInterval)
         alert('Game Over: You Win!')
     }
+
 }
 
 function expandShown(board, cellI, cellJ) {
@@ -204,8 +206,8 @@ function expandShown(board, cellI, cellJ) {
                 cell.isShown = true
                 gGame.shownCount++
                 elNeighborCell.innerText = cell.minesAroundCount === 0 ? '' : cell.minesAroundCount
-                if (cell.minesAroundCount === 0) expandShown(board, elNeighborCell, i, j)
             }
+            if (cell.minesAroundCount === 0) expandShown(board, elNeighborCell, i, j)
         }
     }
 }
