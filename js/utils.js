@@ -161,6 +161,7 @@ function startTimer() {
     gTimerInterval = setInterval(function () {
         var timePassed = Date.now() - startTime
         elTimer.innerText = (timePassed / 1000).toFixed(3)
+        gGame.secpassed = elTimer.innerText
     }, 1)
 }
 

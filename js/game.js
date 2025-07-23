@@ -253,4 +253,15 @@ function safeClick() {
     setTimeout(() => {
         elCell.style.backgroundColor = 'grey'
     }, 1000);
-}   
+}
+
+function storeBestScore() {
+    if (typeof (Storage) == 'undefined') return
+    var oldBestScore = localStorage.getItem('bestScore')
+    if (gGame.secsPassed > oldBestScore) {
+        var name = prompt('Enter your name:')
+        var bestScore = gGame.secsPassed
+        var bestScoreObj = { name, bestScore }
+        localStorage.setItem('bestScore', JSON.stringify(bestScoreObj))
+    }
+}
